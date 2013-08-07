@@ -5,6 +5,8 @@ from kivy.properties import NumericProperty, ReferenceListProperty,\
 from kivy.vector import Vector
 from kivy.clock import Clock
 import os
+import cProfile
+from kivy.utils import platform
 
 
 class PongPaddle(Widget):
@@ -75,7 +77,11 @@ class PongApp(App):
             Clock.schedule_interval(game.update, 1.0 / 60.0)
 
 if __name__ == '__main__':
-    sd_card_path = os.path.dirname('/sdcard/profiles/')
-    if not os.path.exists(sd_card_path):
-        os.mkdir(sd_card_path)
-    cProfile.run('KivEntApp().run()', sd_card_path + '/pong.prof')
+    if platform() == 'android':
+        sd_card_path = os.path.dirname('/sdcard/profiles/')
+        if not os.path.exists(sd_card_path):
+            os.mkdir(sd_card_path)
+        prof_dir = sd_card_path + '/pong.prof'
+    else:
+        prof_dir = 'pong.prof'
+    cProfile.run('PongApp().run()', prof_dir)
