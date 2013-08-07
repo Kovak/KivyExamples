@@ -1,0 +1,40 @@
+#: import Animation kivy.animation.Animation
+
+RootWidget:
+
+<RootWidget>:
+	FloatLayout:
+		size: root.size
+		pos: root.pos
+		CustomButton:
+			button_anim_1: Animation(size_hint_x=.4, duration=.5)
+			button_anim_2: Animation(size_hint_x=.2, duration=.5)
+			size_hint_x: .2
+			size_hint_y: (root.width*self.size_hint_x)/root.height
+			pos_hint: {'x': (1.0-self.size_hint_x)/2., 'y': (1.0-self.size_hint_y)/2.}
+			on_press:
+				self.button_anim_1.bind(on_complete=self.reset_animation)
+				self.button_anim_1.start(self)
+
+<-CustomButton>:
+	text: 'Custom Button'
+	canvas:
+		Color:
+			rgb: (1.0, .8, 0.) if self.state == 'normal' else (.9, .8, .1)
+		Ellipse:
+			pos: self.pos
+			size: self.size
+		Color:
+			rgb: (1.0, 0., 0.)
+		Line:
+			ellipse: self.pos[0], self.pos[1], self.size[0], self.size[1]
+			width: 2.
+	Label:
+		pos: root.pos
+		size: root.size
+		text: root.text
+		color: (0., 0., 0., 1.)
+
+
+
+
