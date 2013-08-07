@@ -1,0 +1,12 @@
+<MyCustomLayout1>:
+	Label:
+		text: 'Hello World'
+		color: (0., 0., 0., 1.)
+		pos_hint: {'x': .40, 'y':.75}
+		size_hint: (.20, .20)
+		canvas.before:
+			Color:
+				rgb: root.label_color
+			Rectangle:
+				size: self.size
+				pos: self.pos

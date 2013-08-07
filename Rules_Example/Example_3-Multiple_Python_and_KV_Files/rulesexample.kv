@@ -1,0 +1,31 @@
+RootWidget:
+
+<RootWidget>:
+	MyCustomLayout1:
+		id: layout_1
+		size: root.size
+		pos: root.pos
+	MyCustomLayout2:
+		layout_1: layout_1
+		size: root.size[0]*.3, root.size[1]*.6
+		pos: root.size[0]*.35, root.size[1]*.1
+		
+<MyCustomLayout2@BoxLayout>:
+	orientation: 'vertical'
+	ToggleButton:
+		text: 'Red'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (1., 0., 0.)
+	ToggleButton:
+		text: 'Green'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (0., 1., 0.)
+	ToggleButton:
+		text: 'Blue'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (0., 0., 1.)
+
+
+
+
+

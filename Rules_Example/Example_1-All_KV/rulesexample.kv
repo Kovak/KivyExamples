@@ -1,0 +1,45 @@
+RootWidget:
+
+<RootWidget>:
+	MyCustomLayout1:
+		id: layout_1
+		size: root.size
+		pos: root.pos
+	MyCustomLayout2:
+		layout_1: layout_1
+		size: root.size[0]*.3, root.size[1]*.6
+		pos: root.size[0]*.35, root.size[1]*.1
+		
+<MyCustomLayout1@FloatLayout>:
+	label_color: (1., 1., 1.)
+	Label:
+		text: 'Hello World'
+		color: (0., 0., 0., 1.)
+		pos_hint: {'x': .40, 'y':.75}
+		size_hint: (.20, .20)
+		canvas.before:
+			Color:
+				rgb: root.label_color if root.label_color else (1.0, 1.0, 1.0)
+			Rectangle:
+				size: self.size
+				pos: self.pos
+
+<MyCustomLayout2@BoxLayout>:
+	orientation: 'vertical'
+	ToggleButton:
+		text: 'Red'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (1., 0., 0.)
+	ToggleButton:
+		text: 'Green'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (0., 1., 0.)
+	ToggleButton:
+		text: 'Blue'
+		group: 'color_buttons'
+		on_press: root.layout_1.label_color = (0., 0., 1.)
+
+
+
+
+
