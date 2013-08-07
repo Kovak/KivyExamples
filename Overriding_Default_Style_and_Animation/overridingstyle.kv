@@ -14,7 +14,7 @@ RootWidget:
 <-CustomButton>:
 	text: 'Custom Button'
 	button_anim_1: Animation(size_hint_x=.4, duration=.5)
-	button_anim_2: Animation(size_hint_x=.2, duration=.5)
+	button_anim_2: Animation(size_hint_x=.2, duration=.5, t='out_bounce')
 	on_press:
 		self.button_anim_1.bind(on_complete=self.reset_animation)
 		self.button_anim_1.start(self)

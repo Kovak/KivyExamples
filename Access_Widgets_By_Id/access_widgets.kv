@@ -1,0 +1,37 @@
+RootWidget:
+
+<RootWidget>:
+	FloatLayout:
+		size: root.size
+		pos: root.pos
+		BoxLayout:
+			orientation: 'vertical'
+			size_hint: (.4, .8)
+			pos_hint: {'x': .3, 'y': .1}
+			Button:
+				id: button_1
+				text: 'Button 1'
+				on_press: root.get_widget_by_id('button_1')
+			Button:
+				id: button_2
+				text: 'Button 2'
+				on_press: root.get_widget_by_id('button_2')
+			Button:
+				id: button_3
+				text: 'Button 3'
+				on_press: root.get_widget_by_id('button_3')
+			Button:
+				id: button_4
+				text: 'Button 4'
+				on_press: root.get_widget_by_id('button_4')
+			Button:
+				id: button_5
+				text: 'Button 5'
+				on_press: root.get_widget_by_id('button_5')
+			Button:
+				id: button_6
+				text: 'Button 6'
+				on_press: root.get_widget_by_id('button_6')
+
+
+

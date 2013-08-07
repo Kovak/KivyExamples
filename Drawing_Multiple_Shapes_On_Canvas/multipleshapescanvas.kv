@@ -1,0 +1,16 @@
+RootWidget:
+
+<RootWidget>:
+	BoxLayout:
+		orientation: 'vertical'
+		pos: root.pos
+		size: root.size[0]*.2, root.size[1]*.4
+		Button:
+			text: 'Simple Draw'
+			on_press: root.draw_stars('simple')
+		Button:
+			text: 'Draw with Rotate'
+			on_press: root.draw_stars('rotate')
+
+
+
