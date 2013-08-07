@@ -1,0 +1,35 @@
+RootWidget:
+
+<RootWidget>:
+	on_touch_down: self.a_function()
+	FloatLayout:
+		size: root.size
+		pos: root.pos
+		CountWidget:
+			size_hint: (.1, .1)
+			pos_hint: {'x': .45, 'y': .45}
+			on_count: second_label.text = self.label_text
+		Label:
+			id: second_label
+			text: '0'
+			size_hint: (.2, .1)
+			pos_hint: {'x': .40, 'y': .35}
+
+<CountWidget>:
+	label_text: count_label.text
+	canvas:
+		Color:
+			rgb: (1.0, .55, .322)
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	Label:
+		id: count_label
+		text: str(root.count)
+		pos: root.pos
+		size: root.size
+
+			
+	
+
+
