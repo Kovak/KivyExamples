@@ -1,0 +1,80 @@
+RootWidget:
+
+<RootWidget>:
+	b_layout2: b_layout2
+	canvas:
+		Color:
+			rgb: (1., 1., 1.)
+		Rectangle:
+			pos: self.pos
+			size: self.size
+	FloatLayout:
+		size: root.size
+		pos: root.pos
+		BoxLayout:
+			id: b_layout2
+			orientation: 'vertical'
+			size_hint: (.6, .8)
+			pos_hint: {'x': .2, 'y': .1}
+			canvas:
+				Color:
+					rgb: (1, 1, 1)
+				Rectangle:
+					size: self.size
+					pos: self.pos
+			DeleteSlideButton:
+			DeleteSlideButton:
+			DeleteSlideButton:
+			DeleteSlideButton:
+			DeleteSlideButton:
+			DeleteSlideButton:
+#: import Animation kivy.animation.Animation
+
+<-DeleteSlideButton>:
+	b_layout: b_layout
+	on_press: self.button_pressed()
+	canvas:
+		Color:
+			rgb: (0, 0, 0)
+		Line:
+			rectangle: self.pos[0], self.pos[1], self.size[0], self.size[1]
+	BoxLayout:
+		id: b_layout
+		size: root.size
+		padding: 25
+		pos: root.pos
+		orientation: 'horizontal'
+		BoxLayout:
+			orientation: 'vertical'
+			Label:
+				color: (0, 0, 0, 1)
+				text: 'blah blah blah blah blah blah blah blah blah blah blah blah blah'
+				text_size: (self.size[0], None)
+				shorten: True
+			Label:
+				color: (0, 0, 0, 1)
+				text: 'blah blah blah blah blah blah blah blah blah blah blah blah blah'
+				text_size: (self.size[0], None)
+				shorten: True
+			Label:
+				color: (0, 0, 0, 1)
+				text: 'blah blah blah blah blah blah blah blah blah blah blah blah blah'
+				text_size: (self.size[0], None)
+				shorten: True
+
+<DeleteButton>:
+	text: 'Delete'
+	rectangle_size_x: self.rectangle_size_x
+	button_anim_1: Animation(rectangle_size_x=0, duration=.20)
+	on_press: app.root.delete_button_remove_widget(self.parent.parent)
+	canvas.after:
+		Color:
+			rgb: (1., 1., 1.)
+		Rectangle:
+			size: self.rectangle_size_x, self.size[1]
+			pos: self.pos
+
+
+
+
+
