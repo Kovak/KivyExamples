@@ -4,7 +4,7 @@ from kivy.graphics import PushMatrix, PopMatrix, Mesh, RenderContext
 from random import random
 from kivy.core.image import Image
 from kivy.uix.floatlayout import FloatLayout
-
+import cProfile
 
 class MultiQuadRenderer(Widget):
 
@@ -12,7 +12,7 @@ class MultiQuadRenderer(Widget):
         self.canvas = RenderContext(use_parent_projection=True)
         self.canvas.shader.source = 'multiquad.glsl'
         super(MultiQuadRenderer, self).__init__(**kwargs) 
-        self.draw_mesh_rectangle(20)
+        self.draw_mesh_rectangle(6000)
 
     def draw_mesh_rectangle(self, number):
         star_list = []
@@ -34,26 +34,21 @@ class MultiQuadRenderer(Widget):
             ]
         indices = []
         for quad_n in xrange(len(star_list)):
-            indices.append(0 + 4 * quad_n)
-            indices.append(1 + 4 * quad_n)
-            indices.append(2 + 4 * quad_n)
-            indices.append(2 + 4 * quad_n)
-            indices.append(3 + 4 * quad_n)
-            indices.append(0 + 4 * quad_n)
+            offset = 4 * quad_n
+            indices += [0 + offset, 1 + offset, 
+                2 + offset, 2 + offset,
+                3 + offset, 0 + offset]
         vertices = []
         for star in star_list:
+            size = .5*star[2]
             vertices += [
-                -.5*star[2],
-                -.5*star[2],
+                -size, -size,
                 0.0, 0.0, star[3], star[0], star[1],
-                .5*star[2],
-                -.5*star[2],
+                size, -size,
                 1.0, 0.0, star[3], star[0], star[1],
-                .5*star[2],
-                .5*star[2],
+                size, size,
                 1.0, 1.0, star[3], star[0], star[1],
-                -.5*star[2],
-                .5*star[2],
+                -size, size,
                 0.0, 1.0, star[3], star[0], star[1],
                 ]
         with self.canvas:
@@ -76,4 +71,5 @@ class MultiQuadShaderApp(App):
         return root
 
 if __name__ == '__main__':
-    MultiQuadShaderApp().run()
+    #MultiQuadShaderApp().run()
+    cProfile.run('MultiQuadShaderApp().run()', 'shader_prof')
