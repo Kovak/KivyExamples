@@ -5,6 +5,7 @@ from random import random
 from kivy.core.image import Image
 from kivy.uix.floatlayout import FloatLayout
 import cProfile
+from kivy.graphics.opengl import glEnable
 
 class PointRenderer(Widget):
 
@@ -16,12 +17,14 @@ class PointRenderer(Widget):
 
     def draw_mesh_points(self, number):
         star_list = []
+        w, h = self.size
+        sa = star_list.append
         for number in xrange(number):
-            rand_x = random()*self.size[0]
-            rand_y = random()*self.size[1]
-            size = 28.
-            rotation = random()*360.
-            star_list.append((rand_x, rand_y, size, rotation))
+            rand_x = random()*w
+            rand_y = random()*h
+            size = 28.0
+            rotation = random()*360.0
+            sa((rand_x, rand_y, size, rotation))
         self.draw_mesh(star_list)
 
     def draw_mesh(self, star_list):
@@ -32,13 +35,17 @@ class PointRenderer(Widget):
             ('vRotation', 1, 'float'),
             ]
         indices = []
-        for star_number in xrange(len(star_list)):
-            indices.append(star_number)
+        ia = indices.append
+        for star_number in range(len(star_list)):
+            ia(star_number)
         vertices = []
+        e = vertices.extend
         for star in star_list:
-            vertices += [
+            e([
                 star[0], star[1], star[2], star[3]
-                ]
+                ])
+        glEnable(0x8642)
+        glEnable(0x8861)
         with self.canvas:
             PushMatrix()
             self.mesh = Mesh(

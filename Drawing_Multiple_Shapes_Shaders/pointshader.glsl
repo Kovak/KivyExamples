@@ -25,10 +25,11 @@ void main (void) {
   float rot = radians(vRotation);
   float a_sin = sin(rot);
   float a_cos = cos(rot);
-  mat4 rot_mat = mat4(a_cos, -a_sin, 0.0, 0.0,
-                    a_sin, a_cos, 0.0, 0.0,
-                    0.0, 0.0, 1.0, 0.0,
-                    0.0, 0.0, 0.0, 1.0 );
+  mat4 rotMat = mat4(a_cos, -a_sin, 0.0, 0.0,
+                     a_sin, a_cos, 0.0, 0.0,
+                     0.0, 0.0, 1.0, 0.0,
+                     0.0, 0.0, 0.0, 1.0);
+  rot_mat = rotMat;
   vec4 pos = vec4(vPosition.xy, 0.0, 1.0);
   gl_Position = projection_mat * modelview_mat * pos;
   gl_PointSize = vSize;
@@ -50,6 +51,10 @@ varying mat4 rot_mat;
 uniform sampler2D texture0;
 
 void main (void){
-    vec2 tex_coord = (rot_mat * vec4(gl_PointCoord, 0, 1)).xy;
-    gl_FragColor = frag_color; /* * texture2D(texture0, gl_PointCoord); */
+    vec2 pos = gl_PointCoord;
+    vec2 offset = vec2(0.5, 0.5);
+    pos -= offset;
+    vec4 tex_coord = rot_mat * vec4(pos, 0.0, 1.0);
+    vec2 new_tex_coord = tex_coord.xy + offset;
+    gl_FragColor = frag_color * texture2D(texture0, new_tex_coord);
 }

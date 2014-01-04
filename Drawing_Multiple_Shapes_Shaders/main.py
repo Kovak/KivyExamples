@@ -16,9 +16,10 @@ class MultiQuadRenderer(Widget):
 
     def draw_mesh_rectangle(self, number):
         star_list = []
+        w, h = self.size
         for number in xrange(number):
-            rand_x = random()*self.size[0]
-            rand_y = random()*self.size[1]
+            rand_x = random()*w
+            rand_y = random()*h
             size = 28.
             rotation = random()*360.
             star_list.append((rand_x, rand_y, size, rotation))
@@ -33,15 +34,17 @@ class MultiQuadRenderer(Widget):
             ('vCenter', 2, 'float')
             ]
         indices = []
+        ie = indices.extend
         for quad_n in xrange(len(star_list)):
             offset = 4 * quad_n
-            indices += [0 + offset, 1 + offset, 
+            ie([0 + offset, 1 + offset, 
                 2 + offset, 2 + offset,
-                3 + offset, 0 + offset]
+                3 + offset, 0 + offset])
         vertices = []
+        e = vertices.extend
         for star in star_list:
             size = .5*star[2]
-            vertices += [
+            e([
                 -size, -size,
                 0.0, 0.0, star[3], star[0], star[1],
                 size, -size,
@@ -50,7 +53,7 @@ class MultiQuadRenderer(Widget):
                 1.0, 1.0, star[3], star[0], star[1],
                 -size, size,
                 0.0, 1.0, star[3], star[0], star[1],
-                ]
+                ])
         with self.canvas:
             PushMatrix()
             self.mesh = Mesh(
