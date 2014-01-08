@@ -6,14 +6,28 @@ from kivy.core.image import Image
 from kivy.uix.floatlayout import FloatLayout
 import cProfile
 from kivy.graphics.opengl import glEnable
+from kivy.clock import Clock
 
 class PointRenderer(Widget):
 
     def __init__(self, **kwargs):
         self.canvas = RenderContext(use_parent_projection=True)
         self.canvas.shader.source = 'pointshader.glsl'
+        glEnable(0x8642) #GL_VERTEX_PROGRAM_POINT_SIZE
+        glEnable(0x8861) #GL_POINT_SPRITE
+        self.mesh = None
         super(PointRenderer, self).__init__(**kwargs) 
-        self.draw_mesh_points(6000)
+        self.draw_mesh_points(60)
+        Clock.schedule_interval(self.test_mesh_remove, 1./60.)
+
+    def test_mesh_remove(self, dt):
+        
+        r = random()
+        if r > .5:
+            self.canvas.remove(self.mesh)
+            self.mesh = None
+        self.draw_mesh_points(60)
+
 
     def draw_mesh_points(self, number):
         star_list = []
@@ -22,10 +36,11 @@ class PointRenderer(Widget):
         for number in xrange(number):
             rand_x = random()*w
             rand_y = random()*h
-            size = 28.0
+            size = 29.0
             rotation = random()*360.0
             sa((rand_x, rand_y, size, rotation))
         self.draw_mesh(star_list)
+
 
     def draw_mesh(self, star_list):
         star_tex = Image('star1.png').texture
@@ -44,17 +59,19 @@ class PointRenderer(Widget):
             e([
                 star[0], star[1], star[2], star[3]
                 ])
-        glEnable(0x8642)
-        glEnable(0x8861)
-        with self.canvas:
-            PushMatrix()
-            self.mesh = Mesh(
-                indices=indices,
-                vertices=vertices,
-                fmt=vertex_format,
-                mode='points',
-                texture=star_tex)
-            PopMatrix()
+        if self.mesh == None:
+            with self.canvas:
+                PushMatrix()
+                self.mesh = Mesh(
+                    indices=indices,
+                    vertices=vertices,
+                    fmt=vertex_format,
+                    mode='points',
+                    texture=star_tex)
+                PopMatrix()
+        else:
+            self.mesh.indices = indices
+            self.mesh.vertices = vertices
 
 
 class PointShaderApp(App):

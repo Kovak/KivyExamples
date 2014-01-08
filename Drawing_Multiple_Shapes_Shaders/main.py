@@ -1,10 +1,13 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.graphics import PushMatrix, PopMatrix, Mesh, RenderContext
-from random import random
+from random import random, choice
 from kivy.core.image import Image
 from kivy.uix.floatlayout import FloatLayout
 import cProfile
+from kivy.atlas import Atlas
+import json
+
 
 class MultiQuadRenderer(Widget):
 
@@ -12,7 +15,8 @@ class MultiQuadRenderer(Widget):
         self.canvas = RenderContext(use_parent_projection=True)
         self.canvas.shader.source = 'multiquad.glsl'
         super(MultiQuadRenderer, self).__init__(**kwargs) 
-        self.draw_mesh_rectangle(6000)
+        self.draw_mesh_rectangle(20)
+        self.draw_mesh_rectangle(200)
 
     def draw_mesh_rectangle(self, number):
         star_list = []
@@ -20,13 +24,29 @@ class MultiQuadRenderer(Widget):
         for number in xrange(number):
             rand_x = random()*w
             rand_y = random()*h
-            size = 28.
             rotation = random()*360.
-            star_list.append((rand_x, rand_y, size, rotation))
+            star_list.append((rand_x, rand_y, rotation))
         self.draw_mesh(star_list)
 
+    def return_uv_coordinates(self, atlas_name, atlas_page, atlas_size):
+        w, h = atlas_size
+        with open(atlas_name, 'r') as fd:
+            atlas_data = json.load(fd)
+        atlas_content = atlas_data[atlas_page]
+        uv_dict = {}
+        for texture_name in atlas_content:
+            data = atlas_content[texture_name]
+            x1, y1 = data[0], data[1]
+            x2, y2 = x1 + data[2], y1 + data[3]
+            uv_dict[texture_name] = x1/w, 1.-y1/h, x2/w, 1.-y2/h, data[2], data[3]
+        return uv_dict
+
     def draw_mesh(self, star_list):
-        star_tex = Image('star1.png').texture
+        filename = 'background_objects.atlas'
+        star_tex = Image('background_objects-0.png').texture
+        size_tex = (float(star_tex.size[0]), float(star_tex.size[1]))
+        uv_dict = self.return_uv_coordinates(filename, 'background_objects-0.png', size_tex)
+        choices = [x for x in uv_dict]
         vertex_format = [
             ('vPosition', 2, 'float'),
             ('vTexCoords0', 2, 'float'),
@@ -43,26 +63,29 @@ class MultiQuadRenderer(Widget):
         vertices = []
         e = vertices.extend
         for star in star_list:
-            size = .5*star[2]
+            tex_choice = choice(choices)
+            uv = uv_dict[tex_choice]
+            w, h = uv[4], uv[5]
+            x0, y0 = uv[0], uv[1]
+            x1, y1 = uv[2], uv[3]
             e([
-                -size, -size,
-                0.0, 0.0, star[3], star[0], star[1],
-                size, -size,
-                1.0, 0.0, star[3], star[0], star[1],
-                size, size,
-                1.0, 1.0, star[3], star[0], star[1],
-                -size, size,
-                0.0, 1.0, star[3], star[0], star[1],
+                -w, -h,
+                x0, y0, star[2], star[0], star[1],
+                w, -h,
+                x1, y0, star[2], star[0], star[1],
+                w, h,
+                x1, y1, star[2], star[0], star[1],
+                -w, h,
+                x0, y1, star[2], star[0], star[1],
                 ])
         with self.canvas:
-            PushMatrix()
             self.mesh = Mesh(
                 indices=indices,
                 vertices=vertices,
                 fmt=vertex_format,
                 mode='triangles',
                 texture=star_tex)
-            PopMatrix()
+
 
 
 class MultiQuadShaderApp(App):
