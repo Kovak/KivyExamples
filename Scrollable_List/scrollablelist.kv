@@ -1,0 +1,30 @@
+RootWidget:
+
+<RootWidget>:
+	scrollview: scrollview
+	ScrollableContainer:
+		id: scrollview
+		size: root.size
+		pos: root.pos
+
+<CustomLabel>:
+	canvas.before:
+		Color:
+			rgb: (.15, .15, .15)
+		Rectangle:
+			size: self.size
+			pos: self.pos
+
+<ScrollableContainer>:
+	scroll_timeout: 75
+	scroll_distance: 10
+	app: app
+	content_layout: content_layout
+	GridLayout:
+		id: content_layout
+		cols: 1
+		size_hint: (1.0, None)
+		pos: root.pos
+		height: self.minimum_height
+		padding: 25
+		spacing: 25
